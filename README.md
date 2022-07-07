@@ -46,7 +46,7 @@ implementation 'com.github.sceneren:DebouncedRuntime:$DebouncedRuntime_version'
 2、有需要可以连续点击的使用```@UncheckViewOnClick```标记
 
 ## demo
-[Demo](https://github.com/sceneren/DebouncedRuntime)
+[DebouncedRuntime](https://github.com/sceneren/DebouncedRuntime)
 
 
 ## Thanks
