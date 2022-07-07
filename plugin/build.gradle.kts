@@ -9,7 +9,7 @@ group = "com.github.sceneren"
 // 描述
 description = "检查快速点击"
 // 版本号
-version = "1.0.0"
+version = "1.0.2"
 
 repositories {
     mavenLocal()
