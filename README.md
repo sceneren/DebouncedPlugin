@@ -1,5 +1,5 @@
-# DebouncedPlugin   [![](https://jitpack.io/v/sceneren/DebouncedPlugin.svg)](https://jitpack.io/private#sceneren/DebouncedRuntime)
-# DebouncedRuntime  [![](https://jitpack.io/v/sceneren/DebouncedRuntime.svg)](https://jitpack.io/private#sceneren/DebouncedRuntime)
+# [DebouncedPlugin](https://github.com/sceneren/DebouncedPlugin)   [![](https://jitpack.io/v/sceneren/DebouncedPlugin.svg)](https://jitpack.io/private#sceneren/DebouncedRuntime)
+# [DebouncedRuntime](https://github.com/sceneren/DebouncedRuntime)  [![](https://jitpack.io/v/sceneren/DebouncedRuntime.svg)](https://jitpack.io/private#sceneren/DebouncedRuntime)
 
 
 
@@ -9,8 +9,6 @@
 -Grade 8.0 后会移除 Transform
 
 # 开始
-
-------
 
 ## 添加 jitpack.io
 
@@ -40,6 +38,13 @@ apply plugin: 'Debounced'
 implementation 'com.github.sceneren:DebouncedRuntime:$DebouncedRuntime_version'
     
 ```
+
+# 用法
+
+1、没有需要特殊处理的view可以直接使用,不需要任何操作
+
+2、有需要可以连续点击的使用```@UncheckViewOnClick```标记
+
 
 ## Thanks
 
