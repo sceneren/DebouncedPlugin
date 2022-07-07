@@ -43,6 +43,4 @@ implementation 'com.github.sceneren:DebouncedRuntime:$DebouncedRuntime_version'
 
 ## Thanks
 
-[sketch](https://github.com/panpf/sketch)
-
-[BigImageViewer](https://github.com/Piasy/BigImageViewer)
+[ASM_Transform](https://github.com/leavesCZY/ASM_Transform)
