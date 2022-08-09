@@ -1,21 +1,17 @@
-package com.github.sceneren.debounced.doubleClick
+package com.github.sceneren.debounced
 
-import com.android.build.api.transform.QualifiedContent
-import com.android.build.gradle.internal.pipeline.TransformManager
+import com.github.sceneren.debounced.doubleClick.DoubleClickConfig
+import com.github.sceneren.debounced.utils.*
 import org.objectweb.asm.*
 import org.objectweb.asm.tree.*
-import com.github.sceneren.debounced.base.BaseTransform
-import com.github.sceneren.debounced.utils.findLambda
-import com.github.sceneren.debounced.utils.hasAnnotation
-import com.github.sceneren.debounced.utils.isStatic
-import com.github.sceneren.debounced.utils.nameWithDesc
 
-/**
- * @Author: leavesCZY
- * @Date: 2021/12/2 16:59
- * @Desc:
- */
-class DoubleClickTransform(private val config: DoubleClickConfig) : BaseTransform() {
+
+class DebouncedClassVisitor(nextVisitor: ClassVisitor, private val config: DoubleClickConfig) :
+    ClassNode(Opcodes.ASM7) {
+
+    init {
+        this.cv = nextVisitor
+    }
 
     private companion object {
 
@@ -23,7 +19,6 @@ class DoubleClickTransform(private val config: DoubleClickConfig) : BaseTransfor
 
         private const val OnClickViewMethodDescriptor = "(Landroid/view/View;)V"
 
-        private const val ButterKnifeOnClickAnnotationDesc = "Lbutterknife/OnClick;"
 
         private val MethodNode.onlyOneViewParameter: Boolean
             get() = desc == OnClickViewMethodDescriptor
@@ -32,21 +27,16 @@ class DoubleClickTransform(private val config: DoubleClickConfig) : BaseTransfor
             return hasAnnotation(config.formatCheckViewOnClickAnnotation)
         }
 
-        private fun MethodNode.hasUncheckViewOnClickAnnotation(config: DoubleClickConfig): Boolean {
+        fun MethodNode.hasUncheckViewOnClickAnnotation(config: DoubleClickConfig): Boolean {
             return hasAnnotation(config.formatUncheckViewOnClickAnnotation)
-        }
-
-        private fun MethodNode.hasButterKnifeOnClickAnnotation(): Boolean {
-            return hasAnnotation(ButterKnifeOnClickAnnotationDesc)
         }
 
     }
 
-    override fun modifyClass(byteArray: ByteArray): ByteArray {
-        val classReader = ClassReader(byteArray)
-        val classNode = ClassNode()
-        classReader.accept(classNode, ClassReader.EXPAND_FRAMES)
-        val methods = classNode.methods
+
+    override fun visitEnd() {
+        super.visitEnd()
+
         if (!methods.isNullOrEmpty()) {
             val shouldHookMethodList = mutableSetOf<String>()
             for (methodNode in methods) {
@@ -62,16 +52,13 @@ class DoubleClickTransform(private val config: DoubleClickConfig) : BaseTransfor
                         //添加了 CheckViewOnClick 注解的情况
                         shouldHookMethodList.add(methodNameWithDesc)
                         continue
-                    } else if (methodNode.hasButterKnifeOnClickAnnotation()) {
-                        //使用了 ButterKnife，且当前 method 添加了 OnClick 注解
-                        shouldHookMethodList.add(methodNameWithDesc)
-                        continue
                     }
                 }
-                if (classNode.isHookPoint(config, methodNode)) {
+                if (isHookPoint(config, methodNode)) {
                     shouldHookMethodList.add(methodNameWithDesc)
                     continue
                 }
+
                 //判断方法内部是否有需要处理的 lambda 表达式
                 val invokeDynamicInsnNodes = methodNode.findHookPointLambda(config)
                 invokeDynamicInsnNodes.forEach {
@@ -120,11 +107,11 @@ class DoubleClickTransform(private val config: DoubleClickConfig) : BaseTransfor
                     }
                 }
                 val classWriter = ClassWriter(ClassWriter.COMPUTE_MAXS)
-                classNode.accept(classWriter)
-                return classWriter.toByteArray()
+                accept(classWriter)
             }
         }
-        return byteArray
+        accept(cv)
+
     }
 
     private fun ClassNode.isHookPoint(config: DoubleClickConfig, methodNode: MethodNode): Boolean {
@@ -140,29 +127,4 @@ class DoubleClickTransform(private val config: DoubleClickConfig) : BaseTransfor
         }
         return false
     }
-
-    private fun MethodNode.findHookPointLambda(config: DoubleClickConfig): List<InvokeDynamicInsnNode> {
-        val onClickListenerLambda = findLambda {
-            val nodeName = it.name
-            val nodeDesc = it.desc
-            val find = config.hookPointList.find { point ->
-                nodeName == point.methodName && nodeDesc.endsWith(point.interfaceSignSuffix)
-            }
-            return@findLambda find != null
-        }
-        return onClickListenerLambda
-    }
-
-    override fun getInputTypes(): Set<QualifiedContent.ContentType> {
-        return TransformManager.CONTENT_CLASS
-    }
-
-    override fun getScopes(): MutableSet<in QualifiedContent.Scope> {
-        return mutableSetOf(
-            QualifiedContent.Scope.PROJECT,
-            QualifiedContent.Scope.SUB_PROJECTS,
-//            QualifiedContent.Scope.EXTERNAL_LIBRARIES
-        )
-    }
-
 }
