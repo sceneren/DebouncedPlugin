@@ -5,8 +5,7 @@
 
 ## 功能列表
 
--基于ASM Transform Android 点击事件防抖处理
--Grade 8.0 后会移除 Transform
+-基于ASM的 Android 点击事件防抖处理
 
 # 开始
 
@@ -29,7 +28,7 @@ classpath "com.github.sceneren:DebouncedPlugin:$DebouncedPlugin_version"
 ## app的build.grade 添加plugin
 ```
 
-apply plugin: 'Debounced'
+apply plugin:'com.github.sceneren.debounced'
 
 ```
 ## app的build.grade 添加依赖
