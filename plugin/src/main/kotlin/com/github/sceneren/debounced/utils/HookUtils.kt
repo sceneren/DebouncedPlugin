@@ -19,7 +19,13 @@ val MethodNode.isStatic: Boolean
     get() = access and Opcodes.ACC_STATIC != 0
 
 fun MethodNode.hasAnnotation(annotationDesc: String): Boolean {
-    return visibleAnnotations?.find { it.desc == annotationDesc } != null
+    var result = false
+    if (annotationDesc.isEmpty()) {
+        result = false
+    }
+    result = visibleAnnotations?.find { it.desc == annotationDesc } != null
+    println("hasAnnotation: $result")
+    return result
 }
 
 

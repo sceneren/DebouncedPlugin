@@ -6,11 +6,11 @@ package com.github.sceneren.debounced.doubleClick
  * @Desc:
  */
 class DoubleClickConfig(
-    private val doubleCheckClass: String = "com.github.sceneren.debunced.DebouncedPredictor",
-    val doubleCheckMethodName: String = "shouldDoClick",
-    val doubleCheckMethodDescriptor: String = "(Landroid/view/View;)Z",
-    private val checkViewOnClickAnnotation: String = "com.github.sceneren.debunced.CheckViewOnClick",
-    private val uncheckViewOnClickAnnotation: String = "com.github.sceneren.debunced.UncheckViewOnClick",
+    private val doubleCheckClass: String = DebouncedExtConfig.DEFAULT_CLASS_NAME,
+    val doubleCheckMethodName: String = DebouncedExtConfig.DEFAULT_METHOD_NAME,
+    val doubleCheckMethodDescriptor: String = DebouncedExtConfig.DOUBLE_CHECK_METHOD_DESCRIPTOR,
+    private val checkViewOnClickAnnotation: String = DebouncedExtConfig.DEFAULT_CHECK_VIEW_ON_CLICK_ANNOTATION,
+    private val uncheckViewOnClickAnnotation: String = DebouncedExtConfig.DEFAULT_UNCHECK_VIEW_ON_CLICK_ANNOTATION,
     val hookPointList: List<DoubleClickHookPoint> = extraHookPoints,
 ) {
 
