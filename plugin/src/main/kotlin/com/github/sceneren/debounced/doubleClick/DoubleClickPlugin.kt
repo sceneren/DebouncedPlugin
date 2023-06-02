@@ -21,16 +21,11 @@ class DoubleClickPlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        Log.useSuccess()
         project.extensions.create<DebouncedExt>(EXT_NAME)
         project.afterEvaluate {
             val debouncedExt = (extensions.findByName(EXT_NAME) as? DebouncedExt)
                 ?: DebouncedExt()
             DebouncedExtConfig.debouncedExt = debouncedExt
-            println("DebouncedExt.className==>${debouncedExt.className}")
-            println("DebouncedExt.methodName==>${debouncedExt.methodName}")
-            println("DebouncedExt.checkViewOnClickAnnotation==>${debouncedExt.checkViewOnClickAnnotation}")
-            println("DebouncedExt.uncheckViewOnClickAnnotation==>${debouncedExt.uncheckViewOnClickAnnotation}")
         }
 
         val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)

@@ -1,9 +1,9 @@
 package com.github.sceneren.debounced.doubleClick
 
 /**
- * @Author: leavesCZY
- * @Date: 2021/12/4 16:04
- * @Desc:
+ * Created by scene on 2023/6/2 15:37
+ *
+ * Description:配置文件
  */
 class DoubleClickConfig(
     private val doubleCheckClass: String = DebouncedExtConfig.DEFAULT_CLASS_NAME,

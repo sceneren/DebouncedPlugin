@@ -24,7 +24,6 @@ fun MethodNode.hasAnnotation(annotationDesc: String): Boolean {
         result = false
     }
     result = visibleAnnotations?.find { it.desc == annotationDesc } != null
-    println("hasAnnotation: $result")
     return result
 }
 
